@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
+import { BorderlessButton } from 'react-native-gesture-handler';
 import { useRoute } from '@react-navigation/native';
 import { Fontisto } from '@expo/vector-icons';
-import { BorderlessButton } from 'react-native-gesture-handler';
+import * as Linking from 'expo-linking';
 
 import { ImageBackground, Text, View, FlatList, Alert, Share, Platform } from 'react-native';
 
 import BannerImg from '../../assets/banner.png';
 
 import { theme } from '../../global/styles/theme';
-import {styles} from './styles';
 import { api } from '../../services/api';
+import {styles} from './styles';
 
 import { AppointmentProps } from '../../components/Appointment';
+import { Member, MemberProps } from '../../components/Member';
 import { ListDivider } from '../../components/ListDivider';
 import { Background } from '../../components/Background';
 import { ListHeader } from '../../components/ListHeader';
 import { ButtonIcon } from '../../components/ButtonIcon';
 import { Header } from '../../components/Header';
-import { Member, MemberProps } from '../../components/Member';
 import { Load } from '../../components/Load';
-import * as Linking from 'expo-linking';
 
 type Params = {
     guildSelected: AppointmentProps;
@@ -67,7 +67,6 @@ export function AppointmentDetails(){
 
     useEffect(() => {
         fetchGuildWidget();
-        console.log(widget);
     },[]);
 
     return(
@@ -97,15 +96,23 @@ export function AppointmentDetails(){
                 <>
                     <ListHeader title="Jogadores" subtitle={`Total ${widget.members.length ? widget.members.length : 0}`} />
                     {
-                    <FlatList 
-                        data={widget.members}
-                        keyExtractor={item => item.id}
-                        renderItem={({item}) => (
-                            <Member data={item} />
-                        )}
-                        ItemSeparatorComponent={() => <ListDivider isCentered />}
-                        style={styles.members}
-                    /> }
+                        <FlatList 
+                            data={widget.members ? widget.members : []}
+                            keyExtractor={item => item.id}
+                            renderItem={({item}) => (
+                                <Member data={item} />
+                            )}
+                            ItemSeparatorComponent={() => <ListDivider isCentered />}
+                            style={styles.members}
+                            ListEmptyComponent={() => (		
+                                <View style={styles.emptyContainer}>		
+                                    <Text style={styles.emptyText}>		
+                                        Não há ninguém online agora.		
+                                    </Text>		
+                                </View>		
+                            )}
+                        /> 
+                    }
                 </>
             }
 
