@@ -43,6 +43,12 @@ export const styles = StyleSheet.create({
     },
     emptyText: {
         fontFamily: theme.fonts.text500,
-        color: theme.colors.heading
+        color: theme.colors.heading,
+        textAlign: 'center'
+    },
+    textToServerOwner: {
+        fontFamily: theme.fonts.text500,
+        color: theme.colors.primary,
+        textAlign: 'center'
     }
 });

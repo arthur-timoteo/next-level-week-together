@@ -45,7 +45,7 @@ function AuthProvider({children}: AuthProviderProps){
     const [user,setUser] = useState<User>({} as User);
     const [loading,setLoading] = useState(false);
 
-    async function  signIn(){
+    async function signIn(){
         try{
             setLoading(true);
 
@@ -80,7 +80,7 @@ function AuthProvider({children}: AuthProviderProps){
 
     async function signOut(){
         setUser({} as User);
-        await AsyncStorage.removeItem(COLLECTION_USERS  );
+        await AsyncStorage.removeItem(COLLECTION_USERS);
     }
 
     async function loadUserStorageData(){
@@ -96,7 +96,7 @@ function AuthProvider({children}: AuthProviderProps){
 
     useEffect(() => {
         loadUserStorageData();
-    });
+    }, []);
 
     return(
         <AuthContext.Provider value={{user, loading, signIn, signOut}}>

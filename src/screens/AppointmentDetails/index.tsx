@@ -35,7 +35,7 @@ type GuildWidget = {
 export function AppointmentDetails(){
     const [widget,setWidget] = useState<GuildWidget>({} as GuildWidget);
     const [loading,setLoading] = useState(true);
-    const [failed,setFailed] = useState(false);
+    const [errorMsg,setErrorMsg] = useState('');
 
     const route = useRoute();
     const { guildSelected } = route.params as Params;
@@ -44,9 +44,14 @@ export function AppointmentDetails(){
         try {
             const response = await api.get(`/guilds/${guildSelected.guild.id}/widget.json`);
             setWidget(response.data);
-        } catch {
-            Alert.alert('Verifique as configurações do servidor. Será que o Widget está habilitado? Será que algum Canal de Convite está selecionado?');
-            setFailed(true);
+        } catch({response}) {
+            if(response.data.message === 'Widget Disabled'){
+                Alert.alert('O Widget do servidor esta desabilitado!');
+                setErrorMsg('Não foi possível acessar os dados do servidor porque o Widget está desabilitado');
+            }else{
+                Alert.alert('Verifique as configurações do servidor!');
+                setErrorMsg('Não foi possível acessar os dados do servidor');
+            }
         } finally {
             setLoading(false);
         }
@@ -76,7 +81,7 @@ export function AppointmentDetails(){
             <Header
                 title="Detalhes"
                 action={
-                    guildSelected.guild.owner &&
+                    guildSelected.guild.owner && widget.instant_invite &&
                     <BorderlessButton onPress={handleShareInvitation}>
                         <Fontisto name="share" size={24} color={theme.colors.primary} />
                     </BorderlessButton>
@@ -95,46 +100,47 @@ export function AppointmentDetails(){
 
             {
                 loading ? <Load /> : 
-                <>
-                    {
-                        !failed ?
-                        <>
-                            <ListHeader title="Jogadores" subtitle={`Total ${widget.members.length ? widget.members.length : 0}`} />
-                            <FlatList 
-                                data={widget.members ? widget.members : []}
-                                keyExtractor={item => item.id}
-                                renderItem={({item}) => (
-                                    <Member data={item} />
-                                )}
-                                ItemSeparatorComponent={() => <ListDivider isCentered />}
-                                style={styles.members}
-                                ListEmptyComponent={() => (		
-                                    <View style={styles.emptyContainer}>		
-                                        <Text style={styles.emptyText}>		
-                                            Não há ninguém online agora.		
-                                        </Text>		
-                                    </View>		
-                                )}
-                            /> 
-                        </>
-                        : <View style={styles.emptyContainer}>		
-                            <Text style={styles.emptyText}>		
-                                Não há ninguém online agora.		
-                            </Text>		
-                        </View>	
-                    }
-                </>
+                errorMsg === '' ?
+                    <>
+                        <ListHeader title="Jogadores" subtitle={`Total ${widget.members.length ? widget.members.length : 0}`} />
+                        <FlatList 
+                            data={widget.members ? widget.members : []}
+                            keyExtractor={item => item.id}
+                            renderItem={({item}) => (
+                                <Member data={item} />
+                            )}
+                            ItemSeparatorComponent={() => <ListDivider isCentered />}
+                            style={styles.members}
+                            ListEmptyComponent={() => (		
+                                <View style={styles.emptyContainer}>		
+                                    <Text style={styles.emptyText}>		
+                                        Não há ninguém online agora.		
+                                    </Text>		
+                                </View>		
+                            )}
+                        /> 
+                    </>
+                :   <View style={styles.emptyContainer}>		
+                        <Text style={styles.emptyText}>		
+                            {errorMsg}		
+                        </Text>		
+                    </View>	
             }
 
-            {
-                guildSelected.guild.owner &&
-                <View style={styles.footer}>
+            <View style={styles.footer}>
+                {
+                    guildSelected.guild.owner && widget.instant_invite &&
                     <ButtonIcon 
                         title="Entrar na partida" 
                         onPress={handleOpenGuild}
                     />
-                </View>
-            }
+                }
+
+                {
+                    guildSelected.guild.owner && widget.instant_invite == null &&
+                    <Text style={styles.textToServerOwner}>Não foi definido um CANAL DE INVITE neste servidor</Text>
+                }
+            </View>
         </Background>
     )
 }

@@ -10,8 +10,8 @@ import { styles } from './styles';
 export function Profile(){
     const { user, signOut } = useAuth();
 
-    function SignOut(){
-        Alert.alert('Logout', 'Deseja sair do GamePlay', 
+    async function handleSignOut(){
+        Alert.alert('Logout', 'Deseja sair do GamePlay?', 
         [
             {
                 text: 'Não',
@@ -27,7 +27,7 @@ export function Profile(){
     return(
         <View style={styles.container}>
 
-            <RectButton onPress={SignOut}>
+            <RectButton onPress={handleSignOut}>
                 <Avatar urlImage={user.avatar} />
             </RectButton>
 

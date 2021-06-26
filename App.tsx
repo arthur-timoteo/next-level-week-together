@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar, LogBox } from 'react-native';
 import { Inter_400Regular, Inter_500Medium } from '@expo-google-fonts/inter';
-import { Rajdhani_500Medium, Rajdhani_700Bold} from '@expo-google-fonts/rajdhani';
+import { Rajdhani_500Medium, Rajdhani_700Bold } from '@expo-google-fonts/rajdhani';
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 
@@ -35,5 +35,5 @@ export default function App(){
         <Routes />
       </AuthProvider>
       </Background>
-  )
+  );
 }
