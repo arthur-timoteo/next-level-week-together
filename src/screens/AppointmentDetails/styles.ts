@@ -37,7 +37,9 @@ export const styles = StyleSheet.create({
         marginBottom: getBottomSpace()
     },
     emptyContainer: {
+        flex: 1,        
         alignItems: 'center',
+        justifyContent: 'center'
     },
     emptyText: {
         fontFamily: theme.fonts.text500,

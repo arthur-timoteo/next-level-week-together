@@ -13,7 +13,7 @@ import { Profile } from '../../components/Profile';
 import { Load } from '../../components/Load';
 
 import { styles } from './styles';
-import { COLLECTION_APPOINTEMENTS } from '../../configs/database';
+import { COLLECTION_APPOINTMENTS } from '../../configs/database';
 
 export function Home(){
     const [category,setCategory] = useState('');
@@ -35,7 +35,7 @@ export function Home(){
     }
 
     async function loadAppointments(){
-        const response = await AsyncStorage.getItem(COLLECTION_APPOINTEMENTS);
+        const response = await AsyncStorage.getItem(COLLECTION_APPOINTMENTS);
         const storage: AppointmentProps[] = response ? JSON.parse(response) : [];
 
         if(category){

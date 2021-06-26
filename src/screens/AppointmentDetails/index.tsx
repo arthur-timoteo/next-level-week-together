@@ -35,6 +35,7 @@ type GuildWidget = {
 export function AppointmentDetails(){
     const [widget,setWidget] = useState<GuildWidget>({} as GuildWidget);
     const [loading,setLoading] = useState(true);
+    const [failed,setFailed] = useState(false);
 
     const route = useRoute();
     const { guildSelected } = route.params as Params;
@@ -44,7 +45,8 @@ export function AppointmentDetails(){
             const response = await api.get(`/guilds/${guildSelected.guild.id}/widget.json`);
             setWidget(response.data);
         } catch {
-            Alert.alert('Verifique as configurações do servidor. Será que o Widget está habilitado?');
+            Alert.alert('Verifique as configurações do servidor. Será que o Widget está habilitado? Será que algum Canal de Convite está selecionado?');
+            setFailed(true);
         } finally {
             setLoading(false);
         }
@@ -94,24 +96,32 @@ export function AppointmentDetails(){
             {
                 loading ? <Load /> : 
                 <>
-                    <ListHeader title="Jogadores" subtitle={`Total ${widget.members.length ? widget.members.length : 0}`} />
                     {
-                        <FlatList 
-                            data={widget.members ? widget.members : []}
-                            keyExtractor={item => item.id}
-                            renderItem={({item}) => (
-                                <Member data={item} />
-                            )}
-                            ItemSeparatorComponent={() => <ListDivider isCentered />}
-                            style={styles.members}
-                            ListEmptyComponent={() => (		
-                                <View style={styles.emptyContainer}>		
-                                    <Text style={styles.emptyText}>		
-                                        Não há ninguém online agora.		
-                                    </Text>		
-                                </View>		
-                            )}
-                        /> 
+                        !failed ?
+                        <>
+                            <ListHeader title="Jogadores" subtitle={`Total ${widget.members.length ? widget.members.length : 0}`} />
+                            <FlatList 
+                                data={widget.members ? widget.members : []}
+                                keyExtractor={item => item.id}
+                                renderItem={({item}) => (
+                                    <Member data={item} />
+                                )}
+                                ItemSeparatorComponent={() => <ListDivider isCentered />}
+                                style={styles.members}
+                                ListEmptyComponent={() => (		
+                                    <View style={styles.emptyContainer}>		
+                                        <Text style={styles.emptyText}>		
+                                            Não há ninguém online agora.		
+                                        </Text>		
+                                    </View>		
+                                )}
+                            /> 
+                        </>
+                        : <View style={styles.emptyContainer}>		
+                            <Text style={styles.emptyText}>		
+                                Não há ninguém online agora.		
+                            </Text>		
+                        </View>	
                     }
                 </>
             }

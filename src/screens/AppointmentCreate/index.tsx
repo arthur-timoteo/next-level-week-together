@@ -7,20 +7,20 @@ import uuid from 'react-native-uuid';
 
 import { Text, View, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 
-import { COLLECTION_APPOINTEMENTS } from '../../configs/database';
+import { COLLECTION_APPOINTMENTS } from '../../configs/database';
 import { theme } from '../../global/styles/theme';
 import { styles } from './styles';
 
 import { CategorySelect } from '../../components/CategorySelect';
 import { ModalView } from '../../components/ModalView';
+import { Background } from '../../components/Background';
 import { SmallInput } from '../../components/SmallInput';
-import { TextArea } from '../../components/TextArea';
 import { GuildIcon } from '../../components/GuildIcon';
+import { TextArea } from '../../components/TextArea';
 import { GuildProps } from '../../components/Guild';
 import { Header } from '../../components/Header';
 import { Button } from '../../components/Button';
 import { Guilds } from '../Guilds';
-import { Background } from '../../components/Background';
 
 export function AppointmentCreate(){
     const [category,setCategory] = useState('');
@@ -61,10 +61,10 @@ export function AppointmentCreate(){
             description
         };
 
-        const storage = await AsyncStorage.getItem(COLLECTION_APPOINTEMENTS);
+        const storage = await AsyncStorage.getItem(COLLECTION_APPOINTMENTS);
         const appointments = storage ? JSON.parse(storage) : [];
 
-        await AsyncStorage.setItem(COLLECTION_APPOINTEMENTS, JSON.stringify([...appointments, newAppointment]));
+        await AsyncStorage.setItem(COLLECTION_APPOINTMENTS, JSON.stringify([...appointments, newAppointment]));
 
         navigation.navigate('Home');
     }

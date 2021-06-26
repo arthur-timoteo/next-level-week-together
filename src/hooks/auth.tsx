@@ -21,7 +21,6 @@ type User = {
     token: string;
 }
 
-
 type AuthContextData = {
     user: User;
     loading: boolean;
